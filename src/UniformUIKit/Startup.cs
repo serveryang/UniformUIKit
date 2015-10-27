@@ -7,6 +7,7 @@ using Microsoft.Dnx.Runtime;
 using Microsoft.Framework.Configuration;
 using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.Logging;
+using UniformUIKit.Migrations;
 using UniformUIKit.Models;
 using UniformUIKit.Services;
 
@@ -14,6 +15,8 @@ namespace UniformUIKit
 {
     public class Startup
     {
+        public IConfigurationRoot Configuration { get; set; }
+
         public Startup(IHostingEnvironment env, IApplicationEnvironment appEnv)
         {
             // Setup configuration sources.
@@ -35,8 +38,6 @@ namespace UniformUIKit
             Configuration = builder.Build();
         }
 
-        public IConfigurationRoot Configuration { get; set; }
-
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
@@ -51,6 +52,7 @@ namespace UniformUIKit
                 {
                     options.Password.RequireDigit = false;
                     options.Password.RequireUppercase = false;
+                    options.Password.RequiredLength = 3;
                 })
                 .AddEntityFrameworkStores<AppDbContext>()
                 .AddDefaultTokenProviders();
@@ -65,10 +67,11 @@ namespace UniformUIKit
             // Register application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
+            services.AddTransient<SeedDataInitializer>();
         }
 
         // Configure is called after ConfigureServices is called.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public async void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, SeedDataInitializer seedDataInitializer)
         {
             loggerFactory.MinimumLevel = LogLevel.Information;
             loggerFactory.AddConsole();
@@ -126,6 +129,9 @@ namespace UniformUIKit
                 // Uncomment the following line to add a route for porting Web API 2 controllers.
                 // routes.MapWebApiRoute("DefaultApi", "api/{controller}/{id?}");
             });
+
+            // Seed default data. Must be places at bottom of <tt>Configure</tt>
+            await seedDataInitializer.InitializeDataAsync();
         }
     }
 }

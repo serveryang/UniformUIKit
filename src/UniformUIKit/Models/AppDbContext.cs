@@ -22,12 +22,6 @@ namespace UniformUIKit.Models
             builder.Entity<IdentityUserClaim<string>>().ToTable("AdminUserUserClaims");
             builder.Entity<IdentityRoleClaim<string>>().ToTable("AdminUserRoleClaims");
             builder.Entity<IdentityUserLogin<string>>().ToTable("AdminUserUserLogins");
-
-            Seed();
-        }
-
-        protected void Seed()
-        {
         }
     }
 }
