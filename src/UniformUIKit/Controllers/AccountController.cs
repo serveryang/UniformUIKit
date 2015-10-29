@@ -76,7 +76,7 @@ namespace UniformUIKit.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    ModelState.AddModelError(string.Empty, "用户名或密码不对！");
                     return View(model);
                 }
             }
