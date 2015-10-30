@@ -1,18 +1,57 @@
 ﻿using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Diagnostics.Entity;
 using Microsoft.AspNet.Hosting;
+using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Data.Entity;
 using Microsoft.Dnx.Runtime;
 using Microsoft.Framework.Configuration;
 using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.Logging;
+using UniformUIKit.Middlewares;
 using UniformUIKit.Migrations;
 using UniformUIKit.Models;
 using UniformUIKit.Services;
 
 namespace UniformUIKit
 {
+    /// <summary>
+    ///  Using StartupDev class when ASPNET_ENV=Dev
+    /// </summary>
+    public class StartupDev
+    {
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        {
+            loggerFactory.MinimumLevel = LogLevel.Information;
+            loggerFactory.AddConsole(minLevel: LogLevel.Information);
+            loggerFactory.AddDebug();
+
+            var logger = loggerFactory.CreateLogger(env.EnvironmentName);
+
+            app.UseRequestLogger();
+
+            app.MapWhen(context =>
+            {
+                return context.Request.Query.ContainsKey("branch");
+            }, HandleBranch);
+
+            app.Run(async context =>
+            {
+                context.Response.ContentType = "text/plain";
+
+                await context.Response.WriteAsync("Hello from " + env.EnvironmentName);
+            });
+        }
+
+        private static void HandleBranch(IApplicationBuilder app)
+        {
+            app.Run(async context =>
+            {
+                await context.Response.WriteAsync("Branch used.");
+            });
+        }
+    }
+
     public class Startup
     {
         public IConfigurationRoot Configuration { get; set; }
@@ -46,6 +85,9 @@ namespace UniformUIKit
                 .AddSqlServer()
                 .AddDbContext<AppDbContext>(options =>
                     options.UseSqlServer(Configuration["Data:DefaultConnection:ConnectionString"]));
+
+            // Adds a default in-memory implementation of IDistributedCache
+            services.AddCaching();
 
             // Add Identity services to the services container.
             services.AddIdentity<AdminUser, IdentityRole>(options =>
@@ -130,7 +172,7 @@ namespace UniformUIKit
                 // routes.MapWebApiRoute("DefaultApi", "api/{controller}/{id?}");
             });
 
-            // Seed default data. Must be places at bottom of <tt>Configure</tt>
+            // Seed default data should only invoke at the end of Configure.
             await seedDataInitializer.InitializeDataAsync();
         }
     }
