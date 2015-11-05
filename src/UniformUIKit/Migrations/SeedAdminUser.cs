@@ -1,4 +1,7 @@
-﻿using System.Security.Claims;
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.Framework.DependencyInjection;
+using System;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using UniformUIKit.Models;
 
@@ -6,17 +9,30 @@ namespace UniformUIKit.Migrations
 {
     public partial class SeedDataInitializer
     {
-        private async Task SeedAdminUsersAsync()
+        private static async Task SeedAdminUsersAsync(IServiceProvider serviceProvider)
         {
-            var adminUserEmail = "serveryang@qq.com";
-            var adminUser = await _userManager.FindByEmailAsync(adminUserEmail);
+            const string adminUserEmail = "serveryang@qq.com";
+            const string roleName = "Administrator";
 
-            if (adminUser == null)
+            var userManager = serviceProvider.GetRequiredService<UserManager<AdminUser>>();
+            var roleManager = serviceProvider.GetRequiredService<RoleManager<AdminRole>>();
+
+            if (!await roleManager.RoleExistsAsync(roleName))
             {
-                adminUser = new AdminUser { UserName = adminUserEmail, Email = adminUserEmail };
+                var adminRole = new AdminRole(roleName);
 
-                var result = await _userManager.CreateAsync(adminUser, "!QAZ2wsx");
-                await _userManager.AddClaimAsync(adminUser, new Claim("ManageStore", "Allowed"));
+                await roleManager.CreateAsync(adminRole);
+                await roleManager.AddClaimAsync(adminRole, new Claim("ManageRole", "Allowed"));
+            }
+
+            var user = await userManager.FindByEmailAsync(adminUserEmail);
+
+            if (user == null)
+            {
+                user = new AdminUser { UserName = adminUserEmail, Email = adminUserEmail };
+                await userManager.CreateAsync(user, "!QAZ2wsx");
+                await userManager.AddToRoleAsync(user, roleName);
+                await userManager.AddClaimAsync(user, new Claim("ManageStore", "Allowed"));
             }
         }
     }

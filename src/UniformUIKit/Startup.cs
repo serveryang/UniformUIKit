@@ -2,7 +2,6 @@
 using Microsoft.AspNet.Diagnostics.Entity;
 using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Http;
-using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Data.Entity;
 using Microsoft.Dnx.Runtime;
 using Microsoft.Framework.Configuration;
@@ -90,7 +89,7 @@ namespace UniformUIKit
             services.AddCaching();
 
             // Add Identity services to the services container.
-            services.AddIdentity<AdminUser, IdentityRole>(options =>
+            services.AddIdentity<AdminUser, AdminRole>(options =>
                 {
                     options.Password.RequireDigit = false;
                     options.Password.RequireUppercase = false;
@@ -109,11 +108,10 @@ namespace UniformUIKit
             // Register application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
-            services.AddTransient<SeedDataInitializer>();
         }
 
         // Configure is called after ConfigureServices is called.
-        public async void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, SeedDataInitializer seedDataInitializer)
+        public async void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             loggerFactory.MinimumLevel = LogLevel.Information;
             loggerFactory.AddConsole();
@@ -173,7 +171,7 @@ namespace UniformUIKit
             });
 
             // Seed default data should only invoke at the end of Configure.
-            await seedDataInitializer.InitializeDataAsync();
+            await SeedDataInitializer.SeedAsync(app.ApplicationServices);
         }
     }
 }

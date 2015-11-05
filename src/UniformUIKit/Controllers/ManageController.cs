@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Security.Claims;
-using Microsoft.AspNet.Authorization;
+﻿using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Mvc;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using UniformUIKit.Models;
 using UniformUIKit.Services;
 using UniformUIKit.ViewModels.Manage;
@@ -369,6 +367,6 @@ namespace UniformUIKit.Controllers
             }
         }
 
-        #endregion
+        #endregion Helpers
     }
 }

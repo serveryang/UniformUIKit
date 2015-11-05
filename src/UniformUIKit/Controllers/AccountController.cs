@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using Microsoft.AspNet.Authorization;
+﻿using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Mvc;
 using Microsoft.AspNet.Mvc.Rendering;
 using Microsoft.Data.Entity;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using UniformUIKit.Models;
 using UniformUIKit.Services;
 using UniformUIKit.ViewModels.Account;
@@ -77,6 +75,7 @@ namespace UniformUIKit.Controllers
                 else
                 {
                     ModelState.AddModelError(string.Empty, "用户名或密码不对！");
+
                     return View(model);
                 }
             }
@@ -193,7 +192,7 @@ namespace UniformUIKit.Controllers
         {
             if (User.IsSignedIn())
             {
-                return RedirectToAction(nameof(ManageController.Index),"Manage");
+                return RedirectToAction(nameof(ManageController.Index), "Manage");
             }
 
             if (ModelState.IsValid)
@@ -472,6 +471,6 @@ namespace UniformUIKit.Controllers
             }
         }
 
-        #endregion
+        #endregion Helpers
     }
 }

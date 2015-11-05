@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNet.Identity;
+﻿using Microsoft.Framework.DependencyInjection;
+using System;
 using System.Threading.Tasks;
 using UniformUIKit.Models;
 
@@ -6,18 +7,16 @@ namespace UniformUIKit.Migrations
 {
     public partial class SeedDataInitializer
     {
-        private AppDbContext _ctx;
-        private UserManager<AdminUser> _userManager;
-
-        public SeedDataInitializer(AppDbContext ctx, UserManager<AdminUser> userManager)
+        public static async Task SeedAsync(IServiceProvider serviceProvider)
         {
-            _ctx = ctx;
-            _userManager = userManager;
-        }
-
-        public async Task InitializeDataAsync()
-        {
-            await SeedAdminUsersAsync();
+            using (var db = serviceProvider.GetRequiredService<AppDbContext>())
+            {
+                //if (await db.Database.EnsureCreatedAsync())
+                //{
+                //    await SeedAdminUsersAsync(serviceProvider);
+                //}
+                await SeedAdminUsersAsync(serviceProvider);
+            }
         }
     }
 }

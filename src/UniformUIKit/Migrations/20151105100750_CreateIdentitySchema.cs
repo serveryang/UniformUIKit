@@ -10,7 +10,7 @@ namespace UniformUIKit.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "AdminUserRoles",
+                name: "AdminRoles",
                 columns: table => new
                 {
                     Id = table.Column<string>(nullable: false),
@@ -20,7 +20,7 @@ namespace UniformUIKit.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_IdentityRole", x => x.Id);
+                    table.PrimaryKey("PK_AdminRole", x => x.Id);
                 });
             migrationBuilder.CreateTable(
                 name: "AdminUsers",
@@ -47,7 +47,7 @@ namespace UniformUIKit.Migrations
                     table.PrimaryKey("PK_AdminUser", x => x.Id);
                 });
             migrationBuilder.CreateTable(
-                name: "AdminUserRoleClaims",
+                name: "AdminRoleClaims",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -60,13 +60,13 @@ namespace UniformUIKit.Migrations
                 {
                     table.PrimaryKey("PK_IdentityRoleClaim<string>", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_IdentityRoleClaim<string>_IdentityRole_RoleId",
+                        name: "FK_IdentityRoleClaim<string>_AdminRole_RoleId",
                         column: x => x.RoleId,
-                        principalTable: "AdminUserRoles",
+                        principalTable: "AdminRoles",
                         principalColumn: "Id");
                 });
             migrationBuilder.CreateTable(
-                name: "AdminUserUserClaims",
+                name: "AdminUserClaims",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -85,7 +85,7 @@ namespace UniformUIKit.Migrations
                         principalColumn: "Id");
                 });
             migrationBuilder.CreateTable(
-                name: "AdminUserUserLogins",
+                name: "AdminUserLogins",
                 columns: table => new
                 {
                     LoginProvider = table.Column<string>(nullable: false),
@@ -103,7 +103,7 @@ namespace UniformUIKit.Migrations
                         principalColumn: "Id");
                 });
             migrationBuilder.CreateTable(
-                name: "AdminUserUserRoles",
+                name: "AdminUserRoles",
                 columns: table => new
                 {
                     UserId = table.Column<string>(nullable: false),
@@ -113,9 +113,9 @@ namespace UniformUIKit.Migrations
                 {
                     table.PrimaryKey("PK_IdentityUserRole<string>", x => new { x.UserId, x.RoleId });
                     table.ForeignKey(
-                        name: "FK_IdentityUserRole<string>_IdentityRole_RoleId",
+                        name: "FK_IdentityUserRole<string>_AdminRole_RoleId",
                         column: x => x.RoleId,
-                        principalTable: "AdminUserRoles",
+                        principalTable: "AdminRoles",
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_IdentityUserRole<string>_AdminUser_UserId",
@@ -125,7 +125,7 @@ namespace UniformUIKit.Migrations
                 });
             migrationBuilder.CreateIndex(
                 name: "RoleNameIndex",
-                table: "AdminUserRoles",
+                table: "AdminRoles",
                 column: "NormalizedName");
             migrationBuilder.CreateIndex(
                 name: "EmailIndex",
@@ -139,11 +139,11 @@ namespace UniformUIKit.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable("AdminUserRoleClaims");
-            migrationBuilder.DropTable("AdminUserUserClaims");
-            migrationBuilder.DropTable("AdminUserUserLogins");
-            migrationBuilder.DropTable("AdminUserUserRoles");
+            migrationBuilder.DropTable("AdminRoleClaims");
+            migrationBuilder.DropTable("AdminUserClaims");
+            migrationBuilder.DropTable("AdminUserLogins");
             migrationBuilder.DropTable("AdminUserRoles");
+            migrationBuilder.DropTable("AdminRoles");
             migrationBuilder.DropTable("AdminUsers");
         }
     }

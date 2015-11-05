@@ -16,7 +16,65 @@ namespace UniformUIKit.Migrations
                 .Annotation("ProductVersion", "7.0.0-beta8-15964")
                 .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("Microsoft.AspNet.Identity.EntityFramework.IdentityRole", b =>
+            modelBuilder.Entity("Microsoft.AspNet.Identity.EntityFramework.IdentityRoleClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("ClaimType");
+
+                    b.Property<string>("ClaimValue");
+
+                    b.Property<string>("RoleId");
+
+                    b.HasKey("Id");
+
+                    b.Annotation("Relational:TableName", "AdminRoleClaims");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNet.Identity.EntityFramework.IdentityUserClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("ClaimType");
+
+                    b.Property<string>("ClaimValue");
+
+                    b.Property<string>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.Annotation("Relational:TableName", "AdminUserClaims");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNet.Identity.EntityFramework.IdentityUserLogin<string>", b =>
+                {
+                    b.Property<string>("LoginProvider");
+
+                    b.Property<string>("ProviderKey");
+
+                    b.Property<string>("ProviderDisplayName");
+
+                    b.Property<string>("UserId");
+
+                    b.HasKey("LoginProvider", "ProviderKey");
+
+                    b.Annotation("Relational:TableName", "AdminUserLogins");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNet.Identity.EntityFramework.IdentityUserRole<string>", b =>
+                {
+                    b.Property<string>("UserId");
+
+                    b.Property<string>("RoleId");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.Annotation("Relational:TableName", "AdminUserRoles");
+                });
+
+            modelBuilder.Entity("UniformUIKit.Models.AdminRole", b =>
                 {
                     b.Property<string>("Id");
 
@@ -34,65 +92,7 @@ namespace UniformUIKit.Migrations
                     b.Index("NormalizedName")
                         .Annotation("Relational:Name", "RoleNameIndex");
 
-                    b.Annotation("Relational:TableName", "AdminUserRoles");
-                });
-
-            modelBuilder.Entity("Microsoft.AspNet.Identity.EntityFramework.IdentityRoleClaim<string>", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("ClaimType");
-
-                    b.Property<string>("ClaimValue");
-
-                    b.Property<string>("RoleId");
-
-                    b.HasKey("Id");
-
-                    b.Annotation("Relational:TableName", "AdminUserRoleClaims");
-                });
-
-            modelBuilder.Entity("Microsoft.AspNet.Identity.EntityFramework.IdentityUserClaim<string>", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("ClaimType");
-
-                    b.Property<string>("ClaimValue");
-
-                    b.Property<string>("UserId");
-
-                    b.HasKey("Id");
-
-                    b.Annotation("Relational:TableName", "AdminUserUserClaims");
-                });
-
-            modelBuilder.Entity("Microsoft.AspNet.Identity.EntityFramework.IdentityUserLogin<string>", b =>
-                {
-                    b.Property<string>("LoginProvider");
-
-                    b.Property<string>("ProviderKey");
-
-                    b.Property<string>("ProviderDisplayName");
-
-                    b.Property<string>("UserId");
-
-                    b.HasKey("LoginProvider", "ProviderKey");
-
-                    b.Annotation("Relational:TableName", "AdminUserUserLogins");
-                });
-
-            modelBuilder.Entity("Microsoft.AspNet.Identity.EntityFramework.IdentityUserRole<string>", b =>
-                {
-                    b.Property<string>("UserId");
-
-                    b.Property<string>("RoleId");
-
-                    b.HasKey("UserId", "RoleId");
-
-                    b.Annotation("Relational:TableName", "AdminUserUserRoles");
+                    b.Annotation("Relational:TableName", "AdminRoles");
                 });
 
             modelBuilder.Entity("UniformUIKit.Models.AdminUser", b =>
@@ -145,7 +145,7 @@ namespace UniformUIKit.Migrations
 
             modelBuilder.Entity("Microsoft.AspNet.Identity.EntityFramework.IdentityRoleClaim<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNet.Identity.EntityFramework.IdentityRole")
+                    b.HasOne("UniformUIKit.Models.AdminRole")
                         .WithMany()
                         .ForeignKey("RoleId");
                 });
@@ -166,7 +166,7 @@ namespace UniformUIKit.Migrations
 
             modelBuilder.Entity("Microsoft.AspNet.Identity.EntityFramework.IdentityUserRole<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNet.Identity.EntityFramework.IdentityRole")
+                    b.HasOne("UniformUIKit.Models.AdminRole")
                         .WithMany()
                         .ForeignKey("RoleId");
 
