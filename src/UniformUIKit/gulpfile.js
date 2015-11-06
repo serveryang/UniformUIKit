@@ -8,7 +8,12 @@ var gulp = require("gulp"),
     project = require("./project.json");
 
 var paths = {
-    webroot: "./" + project.webroot + "/"
+    webroot: "./" + project.webroot + "/",
+    lib: "./wwwroot/lib/",
+    login: {
+        js: "./wwwroot/login/js/",
+        css: "./wwwroot/login/css/"
+    }
 };
 
 paths.js = paths.webroot + "js/**/*.js";
@@ -46,4 +51,32 @@ gulp.task("min", ["min:js", "min:css"]);
 
 gulp.task("default", function () {
     console.log('this is default task!');
+});
+
+gulp.task("login.min.js", function () {
+    var srcLoginJs = [
+        paths.webroot + "login/js/jquery-1.9.1.js",
+        paths.webroot + "login/js/jquery.icheck.js",
+        paths.webroot + "login/js/bootstrap.js",
+        paths.webroot + "login/js/modernizr.js",
+        paths.webroot + "login/js/placeholders.min.j",
+        paths.webroot + "login/js/respond.src.js",
+        paths.webroot + "login/js/waypoints.min.js",
+        paths.webroot + "login/js/jquery.backstretch.js",
+        paths.webroot + "login/js/login.js",
+        paths.webroot + "lib/jquery-validation/jquery.validate.js",
+        paths.webroot + "lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"
+    ];
+
+    gulp.src(srcLoginJs).pipe(concat("login.min.js")).pipe(gulp.dest(paths.login.js));
+});
+
+gulp.task("login.min.css", function () {
+    var srcLoginCss = [
+        paths.webroot + "login/css/font.css",
+        paths.webroot + "login/css/preview.css",
+        paths.webroot + "login/css/login.css",
+    ];
+
+    gulp.src(srcLoginCss).pipe(concat("login.min.css")).pipe(gulp.dest(paths.login.css));
 });
